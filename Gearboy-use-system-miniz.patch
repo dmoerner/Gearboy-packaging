@@ -1,0 +1,41 @@
+Build against system copy of miniz.
+
+Forwarded upstream: https://github.com/drhelius/Gearboy/issues/41
+
+Correctness acknowledged by upstream, but not merged because they need
+a local copy of miniz for iOS and Windows builds, and don't want to
+maintain separate *.pro files.
+
+diff -up ./platforms/linux/Gearboy/Gearboy.pro.orig ./platforms/linux/Gearboy/Gearboy.pro
+--- ./platforms/linux/Gearboy/Gearboy.pro.orig	2017-01-14 17:24:12.116000000 -0500
++++ ./platforms/linux/Gearboy/Gearboy.pro	2017-01-14 17:24:49.339000000 -0500
+@@ -17,7 +17,7 @@ INCLUDEPATH += /usr/local/include
+ DEPENDPATH += /usr/local/lib
+ 
+ LIBS += -L/usr/local/lib -lSDL2 \
+--lGLEW -lGLU -lGL
++-lGLEW -lGLU -lGL -lminiz
+ 
+ SOURCES += \
+     ../../../src/audio/Blip_Buffer.cpp \
+@@ -45,7 +45,6 @@ SOURCES += \
+     ../../../src/Processor.cpp \
+     ../../../src/RomOnlyMemoryRule.cpp \
+     ../../../src/Video.cpp \
+-    ../../../src/miniz/miniz.c \
+     ../../qt-shared/About.cpp \
+     ../../qt-shared/Emulator.cpp \
+     ../../qt-shared/GLFrame.cpp \
+diff -up ./src/Cartridge.cpp.orig ./src/Cartridge.cpp
+--- ./src/Cartridge.cpp.orig	2017-01-14 17:25:48.619000000 -0500
++++ ./src/Cartridge.cpp	2017-01-14 17:26:01.860000000 -0500
+@@ -19,8 +19,8 @@
+ 
+ #include <string>
+ #include <algorithm>
++#include <miniz.h>
+ #include "Cartridge.h"
+-#include "miniz/miniz.c"
+ 
+ Cartridge::Cartridge()
+ {
